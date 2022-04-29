@@ -6,7 +6,7 @@
 /*   By: ychibani <ychibani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 08:42:29 by ychibani          #+#    #+#             */
-/*   Updated: 2022/04/29 10:17:08 by ychibani         ###   ########.fr       */
+/*   Updated: 2022/04/29 19:12:59 by ychibani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,6 @@ void	ft_free(char **tab)
 // 	execve(find_command_path(data, cmd[0]), cmd, data->env);
 // 	perror(cmd[0]);
 // }
-
-int open_outfile(int ac, char **av)
-{
-	int fd;
-
-	fd = open(av[ac - 1], O_CREAT | O_RDWR | O_TRUNC, 0644);
-	return (fd);
-}
 
 
 void	close_write_and_read(int pipe[2])
@@ -99,83 +91,64 @@ void	finisher_child(char *command, char **env)
 	exit(127);
 }
 
-void	exec_children_work(int ac, char **av, int outfile, int index, int pipe[2], char **env, int prev_read)
+void	_wait(int *pid, t_program_data *data)
 {
-	(void)ac;
-	if (index == 0)
-	{
-		close(pipe[0]);
-		dup2(prev_read, STDIN_FILENO);
-		dup2(pipe[1], STDOUT_FILENO);
-		// parcequ'on laisse que 3 fd ouverts
-		close(prev_read);
-		close(pipe[1]);
-		close(outfile);
-		starter_child(av[2], env);
-	}
-	else if (index < (ac - 4))
-	{
-		close(outfile);
-		dup2(prev_read, STDIN_FILENO);
-		dup2(pipe[1], STDOUT_FILENO);
-		// parcequ'on laisse que 3 fd ouverts
-		close(pipe[1]);
-		close(prev_read);
-		runner_child(av[2], env);
-	}
-	else
-	{
-		close(pipe[1]);
-		dup2(prev_read, STDIN_FILENO);
-		dup2(outfile, STDOUT_FILENO);
-		// parcequ'on laisse que 3 fd ouverts
-		close(prev_read);
-		close(outfile);
-		finisher_child(av[3], env);
-	}
+	int	i;
+
+	i = 0;
+	while (i < data->ninst)
+		waitpid(pid[i++], 0, 0);	
+	free(pid);
 }
 
+int	_close_file_descriptors(int _first, int _second)
+{
+	if ((close(_first) < 0) || close(_second) < 0))
+		return (_ERROR_);
+	return (_SUCCESS_);
+}
+
+int	_file_descriptors_duplicators(int _first, int _second)
+{
+	if ((dup2(_first, STDIN_FILENO < 0)) || (dup2(_second, STDOUT_FILENO) < 0))
+		return (1);
+	return (0);
+}
 int	main(int ac, char **av, char **env)
 {
+	t_program_data	*data;
 	int     		*pid;
-	int     		_pipe[2];
-	int				i;
-	int				outfile;
-	int				prev_read;
 
-	prev_read = open(av[1], O_RDONLY);
-	pid = (int *)malloc(sizeof(int) * 3);
 	if (ac < 5)
 		return (ft_putstr_fd("Invalid number of arguments\n", 2), 0);
-	outfile = open_outfile(ac, av);
-	i = 0;
-	while (i < ac - 3)
+	if (!init_data(ac, av, env, data))
+		return (2);
+	pid = (int *)malloc(sizeof(int) * data->ninst);
+	if (!pid)
+		return (clean(data), 2);
+	while (data->index < ac - 3)
 	{
-		pipe(_pipe);
-		pid[i] = fork();
-		if (pid[i] < 0)
-			return (perror("fork "), 2);
-		if (!__is_child(pid[i]))
-			exec_children_work(ac, av, outfile, i, _pipe, env, prev_read);
-		if (__is_child(pid[i]))
-		{
-			close(prev_read);
-			close(_pipe[1]);
-			prev_read = _pipe[0];
-		while (1)
-			i++;
+		if (pipe(data->pipe) < 0)
+		{	
+			_error_prompt("pipe :");
+			exit(0);
 		}
-		i++;
+		pid[data->index] = fork();
+		if (pid[data->index] < 0)
+			return (perror("fork "), 2);
+		if (!__is_child(pid[data->index]))
+			children_work(ac, av, data);
+		if (__is_child(pid[data->index]))
+		{
+			close(data->prev_read);
+			close(data->pipe[1]);
+			data->prev_read = data->pipe[0];
+		}
+		data->index++;
+		data->elem = data->elem->next;
 	}
-	i = 0;
-	while (i < 3)
-		waitpid(pid[i++], 0, 0);
-	write(2, "COUCOU\n", 7);
-	while (1)
-		i++;
-	free(pid);
-	close(prev_read);
-	close(outfile);
-	//Clean Everything;
-	return (0);
+	_wait(pid, data);
+	if (_close_file_descriptors(data->prev_read, data->outfile) == _ERROR_)
+		return (_error_prompt("close :"), 2);
+	return (clean(data), _SUCCESS_);
 }

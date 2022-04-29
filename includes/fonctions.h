@@ -6,7 +6,7 @@
 /*   By: ychibani <ychibani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 08:28:22 by ychibani          #+#    #+#             */
-/*   Updated: 2022/04/28 13:54:27 by ychibani         ###   ########.fr       */
+/*   Updated: 2022/04/29 12:38:04 by ychibani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,18 @@ typedef struct s_program_data	t_program_data;
 typedef struct s_inst			t_inst;
 
 
-// struct s_program_data
-// {
-// 	pid_t	*pid;
-// 	int		(*fd)[2];
-// 	int		infile;
-// 	int		outfile;
-// 	char	**path;
-// 	char    **env;
-// 	char 	*limiter;
-// 	t_list	*elem;
-// 	size_t	ninst;
-// 	size_t	npipe;
-// 	size_t	index;
-// };
+struct s_program_data
+{
+	int		pipe[2];
+	int		prev_read;
+	int		outfile;
+	char	**path;
+	char    **env;
+	char 	*limiter;
+	t_list	*elem;
+	size_t	ninst;
+	size_t	index;
+};
 
 /*parsing*/
 char	**get_path(char **envp);

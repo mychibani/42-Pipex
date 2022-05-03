@@ -19,7 +19,7 @@ static t_list    *init_inst_list(int ac, char **av, int i)
 	head = NULL;
     while (i < ac - 1)
     {
-        ft_lstadd_back(&head, ft_lstnew(av[i]));
+        ft_lstadd_back(&head, ft_lstnew(ft_split(av[i], ' ')));
         i++;
     }
 	return (head);
@@ -27,35 +27,46 @@ static t_list    *init_inst_list(int ac, char **av, int i)
 
 static void	init_data_heredoc(t_program_data *data, int ac, char **av, char **env)
 {
-	// data->prev_read = 0; open(here_doc)
-	data->outfile = open(av[ac - 1], O_RDWR | O_APPEND | O_CREAT, 0644);
+	data->prev_read = open("/tmp/here_doc", O_CREAT | O_RDWR | O_APPEND, 0644);
+	data->outfile = open(av[ac], O_RDWR | O_APPEND | O_CREAT, 0644);
     data->elem = init_inst_list(ac, av, 3);
-	data->ninst = ft_lstsize(data->elem) - 1;
+	data->ninst = ft_lstsize(data->head) - 1;
 	data->env = env;
 	data->path = get_path(env);
 	data->limiter = av[2];
-	data->pipe = 0;
 	data->index = 0;
+	data->head = data->elem;
 }
 
 static void	init_usual_data(t_program_data *data, int ac, char **av, char **env)
 {
-	// data->prev_read = o; open(infile);
+	data->prev_read = open(av[1], O_RDONLY);
 	data->outfile = open(av[ac - 1], O_RDWR | O_TRUNC | O_CREAT, 0644);
     data->elem = init_inst_list(ac, av, 2);
 	data->ninst = ft_lstsize(data->elem);
 	data->env = env;
 	data->path = get_path(env);
 	data->limiter = NULL;
-	data->pipe = 0;
 	data->index = 0;
+	data->head = data->elem;
+}
+
+void	init(t_program_data *data)
+{
+	data->prev_read = 0;
+	data->outfile = 0;
+	data->elem = NULL;
+	data->ninst = 0;
+	data->env = NULL;
+	data->path = NULL;
+	data->limiter = NULL;
+	data->index = 0;
+	data->head = NULL;
 }
 
 t_program_data	*init_data(int ac, char **av, char **env, t_program_data *data)
 {
-	data = (t_program_data *)malloc(sizeof(t_program_data));
-	if (!data)
-		return (NULL);
+	init(data);
 	if (__is_same(av[1], "here_doc"))
 		init_data_heredoc(data, ac, av, env);
 	else

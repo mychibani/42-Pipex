@@ -6,44 +6,59 @@
 /*   By: ychibani <ychibani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 08:28:22 by ychibani          #+#    #+#             */
-/*   Updated: 2022/04/29 12:38:04 by ychibani         ###   ########.fr       */
+/*   Updated: 2022/05/03 14:37:21 by ychibani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef _FONCTION_H
 # define _FONCTION_H
-# include "libft.h"
 
 typedef struct s_program_data	t_program_data;
-typedef struct s_inst			t_inst;
+typedef struct s_list			t_list;
 
 
 struct s_program_data
 {
+	int		*pid;
 	int		pipe[2];
 	int		prev_read;
 	int		outfile;
 	char	**path;
 	char    **env;
 	char 	*limiter;
+	t_list	*head;
 	t_list	*elem;
 	size_t	ninst;
 	size_t	index;
 };
 
+struct s_list
+{
+	char **content;
+	t_list *next;
+};
+
 /*parsing*/
 char	**get_path(char **envp);
 char	*pipex_join(char *path, char *instructions);
-char	*find_command_path(t_program_data *data, char *command);
+char	*find_command_path(t_program_data *data);
 int		parsing(int ac, char **av, char **envp, t_program_data *data);
 
 
 /*utils*/
+int	_file_descriptors_duplicators(int _first, int _second);
+int	_close_file_descriptors(int _first, int _second);
 void	print_data(t_program_data *data);
 void	print_tab(char **tab);
 int		__is_child(pid_t process);
 int		__is_same(char *str, char *is_same);
 
+
+/*pipex*/
+void starter_child_worker(t_program_data *data);
+void child_worker(t_program_data *data);
+void finisher_child_worker(t_program_data *data);
+void exec_children_work(t_program_data *data);
 
 /*init*/
 t_program_data	*init_data(int ac, char **av, char **env, t_program_data *data);
@@ -55,6 +70,7 @@ void	_error_prompt(char *str);
 
 /*clean*/
 void    clean(t_program_data *data);
+void	_clean_char_tab(char **str);
 
 
 /*libft*/
@@ -62,5 +78,12 @@ char	**ft_split(char const *s, char c);
 void	ft_putstr_fd(char *str, int fd);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int		ft_strcmp(const char *s1, const char *s2);
+int		ft_strlen(const char *str);
+void	ft_lstadd_back(t_list **head, t_list *new);
+t_list	*ft_lstnew(void *content);
+int		ft_lstsize(t_list *lst);
+void	ft_lstclear(t_list **lst, void (*del)(void*));
+int		ft_putnbr_fd(int n, int fd);
+/*exec*/
 
 #endif

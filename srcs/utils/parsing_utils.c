@@ -1,36 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   define.h                                           :+:      :+:    :+:   */
+/*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ychibani <ychibani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/29 08:28:36 by ychibani          #+#    #+#             */
-/*   Updated: 2022/04/30 13:30:25 by ychibani         ###   ########.fr       */
+/*   Created: 2022/05/02 18:53:56 by ychibani          #+#    #+#             */
+/*   Updated: 2022/05/02 18:57:19 by ychibani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef DEFINE_H
-# define DEFINE_H
+// #include "pipex.h"
 
-# ifndef _ERROR_
-#  define _ERROR_ -1
-# endif
+// int _here_doc(void)
+// {
+//     char *str;
 
-# ifndef _SUCCESS_
-#  define _SUCCESS_ 1
-# endif
+//     str = gnl(0);
+//     while (str)
+//     {
 
-# ifndef _TRUE_
-#  define _TRUE_ 1
-# endif
-
-# ifndef _FALSE_
-#  define _FALSE_ 0
-# endif
-
-# ifndef _FAILURE_
-#  define _FAILURE_ 0
-# endif
-
-#endif
+//     }
+// }

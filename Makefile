@@ -6,8 +6,7 @@ SRCS_PIPEX		=	srcs/exec_pipex/children_work.c			\
 SRCS_PARSING		=	srcs/parsing/parsing.c		\
 
 
-SRCS_UTILS		=		srcs/utils/pipex_prep.c	\
-						srcs/utils/pipex_utils.c	\
+SRCS_UTILS		=		srcs/utils/pipex_utils.c	\
 
 
 SRCS_INIT		=		srcs/init/init_pipex.c	\
@@ -50,7 +49,7 @@ LIBFT			=	libft/libft.a
 
 CC				=	gcc 
 
-CFLAGS			=  -Wall -Werror -Wextra -fsanitize=address -g3
+CFLAGS			=  -Wall -Werror -Wextra 
 
 RM				=	rm -rf
 

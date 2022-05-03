@@ -6,7 +6,7 @@
 /*   By: ychibani <ychibani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 10:21:38 by ychibani          #+#    #+#             */
-/*   Updated: 2022/05/03 14:49:21 by ychibani         ###   ########.fr       */
+/*   Updated: 2022/05/03 14:49:03by ychibani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,9 @@ int	__is_same(char *str, char *is_same)
 int	_close_file_descriptors(int _first, int _second)
 {
 	if (close(_first) < 0 || close(_second) < 0)
+	{
 		return (_ERROR_);
+	}
 	return (_SUCCESS_);
 }
 
@@ -50,7 +52,7 @@ void	print_list(t_list *lst)
 	{
 		while (lst->content[i])
 		{
-			printf("%s\n", (char *)lst->content[i]);
+			printf("%s\t", (char *)lst->content[i]);
 			i++;
 		}
 		lst = lst->next;
@@ -73,7 +75,6 @@ void	print_tab(char **tab)
 		printf("%s\n", tab[i]);
 		i++;
 	}
-	write(1, "\n", 1);
 }
 
 void print_data(t_program_data *data)
@@ -88,6 +89,7 @@ void print_data(t_program_data *data)
 	printf("------------------------\n");
 	printf("inst list = \t");
 	print_list(data->elem);
+	printf("\n");
 	printf("nombre de commande %ld\n", data->ninst);
 	printf("index == %ld\n", data->index);
 }

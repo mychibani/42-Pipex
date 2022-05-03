@@ -27,8 +27,8 @@ static t_list    *init_inst_list(int ac, char **av, int i)
 
 static void	init_data_heredoc(t_program_data *data, int ac, char **av, char **env)
 {
+	data->outfile = open_file(av[1], av[ac - 1], 0, data);
 	data->prev_read = open("/tmp/here_doc", O_CREAT | O_RDWR | O_APPEND, 0644);
-	data->outfile = open(av[ac], O_RDWR | O_APPEND | O_CREAT, 0644);
     data->elem = init_inst_list(ac, av, 3);
 	data->ninst = ft_lstsize(data->head) - 1;
 	data->env = env;
@@ -36,12 +36,15 @@ static void	init_data_heredoc(t_program_data *data, int ac, char **av, char **en
 	data->limiter = av[2];
 	data->index = 0;
 	data->head = data->elem;
+	data->pid = (int *)malloc(sizeof(int) * (data->ninst));
+	if (!data->pid)
+		_error_prompt("error :");
 }
 
 static void	init_usual_data(t_program_data *data, int ac, char **av, char **env)
 {
-	data->prev_read = open(av[1], O_RDONLY);
-	data->outfile = open(av[ac - 1], O_RDWR | O_TRUNC | O_CREAT, 0644);
+	data->outfile = open_file(av[1], av[ac - 1], 0, data);
+	data->prev_read = open_file(av[1], av[ac - 1], 1, data);
     data->elem = init_inst_list(ac, av, 2);
 	data->ninst = ft_lstsize(data->elem);
 	data->env = env;
@@ -49,6 +52,9 @@ static void	init_usual_data(t_program_data *data, int ac, char **av, char **env)
 	data->limiter = NULL;
 	data->index = 0;
 	data->head = data->elem;
+	data->pid = (int *)malloc(sizeof(int) * (data->ninst));
+	if (!data->pid)
+		_error_prompt("error :");
 }
 
 void	init(t_program_data *data)

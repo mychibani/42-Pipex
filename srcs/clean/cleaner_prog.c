@@ -6,7 +6,7 @@
 /*   By: ychibani <ychibani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 16:08:04 by ychibani          #+#    #+#             */
-/*   Updated: 2022/05/03 14:41:23 by ychibani         ###   ########.fr       */
+/*   Updated: 2022/05/03 16:02:28 by ychibani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void useless_fct(void *elem)
 {
 	(void)elem;
 }
+
 void    clean(t_program_data *data)
 {
 	t_list *temp;

@@ -18,39 +18,28 @@ void	_error_prompt(char *str)
 	exit(EXIT_FAILURE);
 }
 
-void	ft_free(char **tab)
+
+int	open_file(char *infile_name, char *outfile_name, int mode, t_program_data *data)
 {
-	int i;
+	int infile;
 
-	i = 0;
-	while (tab[i])
+	if (mode)
 	{
-		free(tab[i]);
-		i++;
+		infile = open(infile_name, O_RDONLY);
+		if (access(infile_name, R_OK))
+		{
+			ft_putstr_fd("pipex: ", STDERR_FILENO);
+			ft_putstr_fd("no such file or directory: ", STDERR_FILENO);
+			ft_putstr_fd(infile_name, STDERR_FILENO);
+			ft_putstr_fd("\n", 2);
+			free(data);
+			exit(0);
+		}
+		else
+			return (infile);
 	}
-	free(tab);
+	return (open(outfile_name, O_RDWR | O_TRUNC | O_CREAT, 0644));
 }
-
-// void	exec(t_program_data *data)
-// {
-// 	char		**cmd;
-// 	int			i = 0;
-
-// 	cmd = ft_split(data->elem->content, ' ');
-// 	if (cmd)
-// 	{
-// 		while (cmd[i])
-// 		{
-// 			printf("command = %s\n", cmd[i]);
-// 			i++;
-// 		}
-// 	}
-// 	execve(find_command_path(data, cmd[0]), cmd, data->env);
-// 	perror(cmd[0]);
-// }
-
-
-
 
 void	_wait(int *pid, t_program_data *data)
 {
@@ -59,6 +48,7 @@ void	_wait(int *pid, t_program_data *data)
 	i = 0;
 	while (i < (int)data->ninst)
 		waitpid(pid[i++], 0, 0);	
+	close(data->prev_read);
 	free(pid);
 }
 
@@ -67,10 +57,7 @@ int	pipex(t_program_data *data)
 	while (data->index < data->ninst)
 	{
 		if (pipe(data->pipe) < 0)
-		{	
 			_error_prompt("pipe :");
-			exit(0);
-		}
 		data->pid[data->index] = fork();
 		if (data->pid[data->index] < 0)
 			return (perror("fork "), _FAILURE_);
@@ -95,15 +82,15 @@ int	main(int ac, char **av, char **env)
 	if (!data)
 		return (perror("error : "), 1);
 	if (ac < 5)
-		return (ft_putstr_fd("Invalid number of arguments\n", 2), 0);
+		return (free(data), 0);
 	if (!init_data(ac, av, env, data))
 		return (STDERR_FILENO);
-	print_data(data);
+	if (!pipex(data))
+	 	return (STDERR_FILENO);
+	if (_close_file_descriptors(data->prev_read, data->outfile) == _ERROR_)
+	 	return (_error_prompt("close "), STDERR_FILENO);
+	_wait(data->pid, data);
+	clean(data);
+	exit (0);
 	return (clean(data), _SUCCESS_);
-	// if (!pipex(data))
-	// 	return (STDERR_FILENO);
-	// _wait(data->pid, data);
-	// if (_close_file_descriptors(data->prev_read, data->outfile) == _ERROR_)
-	// 	return (_error_prompt("close :"), STDERR_FILENO);
-	// return (_SUCCESS_);
 }

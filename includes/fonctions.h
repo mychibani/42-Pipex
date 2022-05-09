@@ -6,7 +6,7 @@
 /*   By: ychibani <ychibani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 08:28:22 by ychibani          #+#    #+#             */
-/*   Updated: 2022/05/03 21:39:10 by ychibani         ###   ########.fr       */
+/*   Updated: 2022/05/04 13:52:25 by ychibani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,13 @@ int		parsing(int ac, char **av, char **envp, t_program_data *data);
 
 /*utils*/
 int		_file_descriptors_duplicators(int _first, int _second);
-int	_close_file_descriptors(int _first, int _second);
+int		_close_file_descriptors(int _first, int _second);
 void	print_data(t_program_data *data);
 void	print_tab(char **tab);
 int		__is_child(pid_t process);
 int		__is_same(char *str, char *is_same);
 int		open_file(char *infile_name, char *outfile_name, int mode, t_program_data *data);
+
 
 
 /*pipex*/
@@ -85,6 +86,8 @@ t_list	*ft_lstnew(void *content);
 int		ft_lstsize(t_list *lst);
 void	ft_lstclear(t_list **lst, void (*del)(void*));
 int		ft_putnbr_fd(int n, int fd);
+char	*__gnl(int fd);
+
 /*exec*/
 
 #endif

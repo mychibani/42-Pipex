@@ -18,27 +18,35 @@ void	_error_prompt(char *str)
 	exit(EXIT_FAILURE);
 }
 
-
-int	open_file(char *infile_name, char *outfile_name, int mode, t_program_data *data)
+void	_clean_exit(t_program_data *data)
 {
-	int infile;
+	clean(data);
+	exit(0);
+}
+
+int open_infile(char *infile_name, t_program_data *data, int mode)
+{
+	if (access(infile_name, R_OK))
+	{
+		ft_putstr_fd("pipex: ", STDERR_FILENO);
+		ft_putstr_fd("no such file or directory: ", STDERR_FILENO);
+		ft_putstr_fd(infile_name, STDERR_FILENO);
+		ft_putstr_fd("\n", 2);
+	}
+	return (open(infile_name, O_RDONLY));
+}
+
+int	open_outfile(char *outfile_name, int mode)
+{
+	int outfile;
 
 	if (mode)
-	{
-		infile = open(infile_name, O_RDONLY);
-		if (access(infile_name, R_OK))
-		{
-			ft_putstr_fd("pipex: ", STDERR_FILENO);
-			ft_putstr_fd("no such file or directory: ", STDERR_FILENO);
-			ft_putstr_fd(infile_name, STDERR_FILENO);
-			ft_putstr_fd("\n", 2);
-			free(data);
-			exit(0);
-		}
-		else
-			return (infile);
-	}
-	return (open(outfile_name, O_RDWR | O_TRUNC | O_CREAT, 0644));
+		outfile = open(outfile_name, O_RDWR | O_CREAT | O_TRUNC, 0644);
+	else
+		outfile = open(outfile_name, O_RDWR | O_CREAT | O_APPEND, 0644);
+	if (access(outfile_name, R_OK))
+		_error_prompt(outfile_name);
+	return (outfile);
 }
 
 void	_wait(int *pid, t_program_data *data)
@@ -66,10 +74,10 @@ int	pipex(t_program_data *data)
 		if (!__is_child(data->pid[data->index]))
 		{
 			_close_file_descriptors(data->prev_read, data->pipe[1]);
-			data->elem = data->elem->next;
 			data->prev_read = data->pipe[0];
 		}
 		data->index++;
+		data->elem = data->elem->next;
 	}
 	return (_SUCCESS_);
 }
@@ -80,17 +88,16 @@ int	main(int ac, char **av, char **env)
 
 	data = (t_program_data *)malloc(sizeof(t_program_data));
 	if (!data)
-		return (perror("error : "), 1);
+		return (perror("error "), 1);
 	if (ac < 5)
 		return (free(data), 0);
 	if (!init_data(ac, av, env, data))
 		return (STDERR_FILENO);
+	print_data(data);
 	if (!pipex(data))
 	 	return (STDERR_FILENO);
 	if (_close_file_descriptors(data->prev_read, data->outfile) == _ERROR_)
 	 	return (_error_prompt("close "), STDERR_FILENO);
 	_wait(data->pid, data);
-	clean(data);
-	exit (0);
-	return (clean(data), _SUCCESS_);
+	return (_clean_exit(data), _SUCCESS_);
 }

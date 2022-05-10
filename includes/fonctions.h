@@ -52,7 +52,8 @@ void	print_data(t_program_data *data);
 void	print_tab(char **tab);
 int		__is_child(pid_t process);
 int		__is_same(char *str, char *is_same);
-int		open_file(char *infile_name, char *outfile_name, int mode, t_program_data *data);
+int		open_infile(char *infile_name, t_program_data *data);
+int		open_outfile(char *outfile_name, int mode);
 
 
 

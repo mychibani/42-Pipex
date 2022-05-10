@@ -32,11 +32,9 @@ int	check_until_open(void)
 	int temp;
 
 	i = 500;
-	if (!access("/tmp/heredoc.tmp", F_OK))
-		exit(EXIT_FAILURE);
 	while (i >= 0)
 	{
-		temp = open("/tmp/heredoc.tmp", O_RDWR | O_APPEND | O_CREAT, 0644);
+		temp = open("/tmp/heredoc.tmp", O_CREAT | O_APPEND | O_RDWR, 0644);
 		if (temp > 0)
 			return (temp);
 		i--;
@@ -54,10 +52,14 @@ int		here_doc(char *limiter)
 	str = __gnl(0);
 	while (str)
 	{
+		if (!ft_strncmp(str, limiter, ft_strlen(str) - 1))
+		{
+			close(fd);
+			fd = open("/tmp/heredoc.tmp", O_RDONLY);
+			return (free(str), fd);
+		}
 		ft_putstr_fd("pipex_here_doc>", 1);
 		ft_putstr_fd(str, fd);
-		if (!ft_strncmp(str, limiter, ft_strlen(str) - 1))
-			return (free(str), fd);
 		free(str);
 		str = __gnl(0);
 	}
@@ -66,8 +68,8 @@ int		here_doc(char *limiter)
 
 static void	init_data_heredoc(t_program_data *data, int ac, char **av, char **env)
 {
-
-	data->outfile = open_outfile(ac[av - 1], 0);
+	data->outfile = open_outfile(av[ac - 1], 0);
+	data->prev_read = here_doc(av[2]);
     data->elem = init_inst_list(ac, av, 3);
 	data->ninst = ft_lstsize(data->elem);
 	data->env = env;
@@ -76,15 +78,14 @@ static void	init_data_heredoc(t_program_data *data, int ac, char **av, char **en
 	data->index = 0;
 	data->head = data->elem;
 	data->pid = (int *)malloc(sizeof(int) * (data->ninst));
-	data->prev_read = here_doc(data->limiter);
 	if (!data->pid)
 		_error_prompt("error");
 }
 
 static void	init_usual_data(t_program_data *data, int ac, char **av, char **env)
 {
-	data->outfile = open_outfile(av[1], data);
-	data->prev_read = open_file(av[1], av[ac - 1], 1, data);
+	data->outfile = open_outfile(av[ac - 1], 1);
+	data->prev_read = open_infile(av[1], data);
     data->elem = init_inst_list(ac, av, 2);
 	data->ninst = ft_lstsize(data->elem);
 	data->env = env;
@@ -113,6 +114,7 @@ void	init(t_program_data *data)
 t_program_data	*init_data(int ac, char **av, char **env, t_program_data *data)
 {
 	init(data);
+
 	if (__is_same(av[1], "here_doc"))
 		init_data_heredoc(data, ac, av, env);
 	else

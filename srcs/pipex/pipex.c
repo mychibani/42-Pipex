@@ -24,7 +24,7 @@ void	_clean_exit(t_program_data *data)
 	exit(0);
 }
 
-int open_infile(char *infile_name, t_program_data *data, int mode)
+int open_infile(char *infile_name, t_program_data *data)
 {
 	if (access(infile_name, R_OK))
 	{
@@ -32,6 +32,7 @@ int open_infile(char *infile_name, t_program_data *data, int mode)
 		ft_putstr_fd("no such file or directory: ", STDERR_FILENO);
 		ft_putstr_fd(infile_name, STDERR_FILENO);
 		ft_putstr_fd("\n", 2);
+		_clean_exit(data);
 	}
 	return (open(infile_name, O_RDONLY));
 }
@@ -62,6 +63,7 @@ void	_wait(int *pid, t_program_data *data)
 
 int	pipex(t_program_data *data)
 {	
+	// print_data(data);
 	while (data->index < data->ninst)
 	{
 		if (pipe(data->pipe) < 0)
@@ -93,7 +95,6 @@ int	main(int ac, char **av, char **env)
 		return (free(data), 0);
 	if (!init_data(ac, av, env, data))
 		return (STDERR_FILENO);
-	print_data(data);
 	if (!pipex(data))
 	 	return (STDERR_FILENO);
 	if (_close_file_descriptors(data->prev_read, data->outfile) == _ERROR_)

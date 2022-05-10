@@ -35,6 +35,7 @@ void starter_child_worker(t_program_data *data)
 void child_worker(t_program_data *data)
 {
 	close(data->outfile);
+	close(data->pipe[0]);
 	_file_descriptors_duplicators(data->prev_read, data->pipe[1]);
 	_close_file_descriptors(data->pipe[1], data->prev_read);
 	_execute_command(data);

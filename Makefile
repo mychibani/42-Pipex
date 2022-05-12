@@ -1,19 +1,24 @@
 SRCS_MAIN		=	srcs/pipex/pipex.c
 
-SRCS_PIPEX		=	srcs/exec_pipex/children_work.c			\
+
+SRCS_PIPEX		=	srcs/exec_pipex/children_work.c		\
 
 
-SRCS_PARSING		=	srcs/parsing/parsing.c		\
+SRCS_HERE_DOC	=	srcs/here_doc/handle_here_doc.c
+
+
+SRCS_PARSING	=	srcs/parsing/parsing.c		\
 
 
 SRCS_UTILS		=		srcs/utils/pipex_utils.c	\
-
+						srcs/utils/fd_utils.c
 
 SRCS_INIT		=		srcs/init/init_pipex.c	\
 
-SRCS_CLEAN		=		srcs/clean/cleaner_prog.c
 
-#SRCS_BONUS		=		srcs/bonus/pipex_bonus.c	\
+SRCS_CLEAN		=		srcs/clean/cleaner_prog.c \
+
+SRCS_BONUS		=		srcs/bonus/pipex_bonus.c	\
 
 HEADER_FILES	=	libft.h					\
 					define.h				\
@@ -21,7 +26,7 @@ HEADER_FILES	=	libft.h					\
 					includes.h
 
 
-#PIPEX_BONUS			=	pipex_bonus
+PIPEX_BONUS		=	pipex_bonus
 
 NAME			= 	pipex
 
@@ -39,9 +44,11 @@ OBJS_CLEAN		=	${SRCS_CLEAN:.c=.o}
 
 OBJS_PARSING	=	${SRCS_PARSING:.c=.o}
 
-#OBJS_BONUS		=	${SRCS_BONUS:.c=.o}
+OBJS_HERE_DOC	=	${SRCS_HERE_DOC:.c=.o}
 
-DEPS_FILES		=	${SRCS_MAIN:.c=.d} ${SRCS_PIPEX:.c=.d} ${SRCS_PARSING:.c=.d} ${SRCS_UTILS:.c=.d} ${SRCS_INIT:.c=.d} ${SRCS_CLEAN:.c=.d}
+OBJS_BONUS		=	${SRCS_BONUS:.c=.o}
+
+DEPS_FILES		=	${SRCS_MAIN:.c=.d} ${SRCS_PIPEX:.c=.d} ${SRCS_PARSING:.c=.d} ${SRCS_UTILS:.c=.d} ${SRCS_INIT:.c=.d} ${SRCS_CLEAN:.c=.d} ${SRCS_HERE_DOC:.c=.d} ${SRCS_BONUS:.c=.d}
 
 INCS			=	-I ./includes -I libft/includes/
 
@@ -49,7 +56,7 @@ LIBFT			=	libft/libft.a
 
 CC				=	gcc 
 
-CFLAGS			=  -Wall -Werror -Wextra -fsanitize=address -g3
+CFLAGS			=  -Wall -Werror -Wextra -g3 #-fsanitize=address 
 
 RM				=	rm -rf
 
@@ -57,7 +64,6 @@ _END=$'\e[0m
 _BOLD=$'\e[1m
 _UNDER=$'\e[4m
 _REV=$'\e[7m
-
 _GREY=$'\e[30m
 _RED=$'\e[0;31m
 _GREEN=$'\e[32m
@@ -82,29 +88,29 @@ all:		${NAME}
 				@echo "Compiling ${_YELLOW}${_BOLD}$<${_END}..."
 				@${CC} ${CFLAGS} ${INCS} -MMD -c $< -o $@ ${INCS}
 
-${NAME}:		${OBJS_MAIN} ${OBJS_PIPEX} ${OBJS_PARSING} ${OBJS_UTILS} ${OBJS_INIT} ${OBJS_CLEAN}
+${NAME}:		${OBJS_MAIN} ${OBJS_PIPEX} ${OBJS_PARSING} ${OBJS_UTILS} ${OBJS_INIT} ${OBJS_CLEAN} ${OBJS_HERE_DOC}
 				@echo "Compiling ${_GREEN}${_BOLD}libft${_END}..."
 				@${MAKE} -C libft >/dev/null
 				@echo "Compiling ${_CYAN}${_BOLD}pipex${_END}..."
-				@${CC} ${CFLAGS} ${INCS} ${OBJS_MAIN} ${OBJS_UTILS} ${OBJS_PARSING} ${OBJS_PIPEX} ${OBJS_INIT} ${OBJS_CLEAN} -o ${NAME} ${LIBFT}
+				@${CC} ${CFLAGS} ${INCS} ${OBJS_MAIN} ${OBJS_UTILS} ${OBJS_PARSING} ${OBJS_PIPEX} ${OBJS_INIT} ${OBJS_CLEAN} ${OBJS_HERE_DOC} -o ${NAME} ${LIBFT}
 
-#${PIPEX_BONUS}	:	${OBJS_CHECK} ${OBJS_SWAP} ${OBJS_PIPEX} ${OBJS_ALGO} ${OBJS_UTILS}
-#				@echo "Compiling ${_GREEN}${_BOLD}libft${_END}..."
-#				@${MAKE} -C libft >/dev/null
-#				@echo "Compiling ${_CYAN}${_BOLD}checker${_END}..."
-#				@${CC} ${CFLAGS} ${INCS} ${OBJS_CHECK} ${OBJS_SWAP} ${OBJS_PIPEX} ${OBJS_ALGO} ${OBJS_UTILS} -o ${CHECKER} ${LIBFT}
+${PIPEX_BONUS}:	${OBJS_BONUS} ${OBJS_PIPEX} ${OBJS_PARSING} ${OBJS_UTILS} ${OBJS_INIT} ${OBJS_CLEAN} ${OBJS_HERE_DOC}
+				@echo "Compiling ${_GREEN}${_BOLD}libft${_END}..."
+				@${MAKE} -C libft >/dev/null
+				@echo "Compiling ${_CYAN}${_BOLD}pipex${_END}..."
+				@${CC} ${CFLAGS} ${INCS} ${OBJS_MAIN} ${OBJS_UTILS} ${OBJS_PARSING} ${OBJS_PIPEX} ${OBJS_INIT} ${OBJS_CLEAN} ${OBJS_HERE_DOC} -o ${NAME} ${LIBFT}
 
-#bonus		:	${CHECKER}
+bonus		:	${PIPEX_BONUS}
 
 clean:
 				@echo "Deleting ${_RED}${_BOLD}binary files${_END}..."
-				@${RM} ${OBJS_MAIN} ${OBJS_PIPEX} ${OBJS_PARSING} ${OBJS_UTILS} ${OBJS_INIT} ${OBJS_CLEAN} ${DEPS_FILES}
+				@${RM} ${OBJS_MAIN} ${OBJS_PIPEX} ${OBJS_PARSING} ${OBJS_UTILS} ${OBJS_INIT} ${OBJS_CLEAN} ${OBJS_HERE_DOC} ${OBJS_BONUS} ${DEPS_FILES}
 				@echo "Deleting ${_RED}${_BOLD}libft binary files${_END}..."
 				@${MAKE} -C libft clean >/dev/null
 
 fclean:			clean
 				@echo "Deleting ${_RED}${_BOLD}pipex and checker${_END}..."
-				@${RM} ${OBJS_MAIN} ${OBJS_PIPEX} ${OBJS_PARSING} ${OBJS_UTILS} ${OBJS_INIT} ${OBJS_CLEAN} ${NAME}
+				@${RM} ${OBJS_MAIN} ${OBJS_PIPEX} ${OBJS_PARSING} ${OBJS_UTILS} ${OBJS_INIT} ${OBJS_CLEAN} ${OBJS_HERE_DOC} ${NAME} ${BONUS}
 				@echo "Deleting ${_RED}${_BOLD}libft librairy${_END}..."
 				@${MAKE} -C libft fclean >/dev/null
 

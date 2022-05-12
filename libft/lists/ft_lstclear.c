@@ -18,6 +18,8 @@ void	ft_lstclear(t_list **lst, void (*del)(void*))
 {
 	t_list	*to_delete;
 
+	if (!*lst)
+		return ;
 	while (*lst)
 	{
 		to_delete = *lst;

@@ -14,7 +14,8 @@
 
 char	**get_path(char **envp)
 {
-	int		i;
+	int	i;
+
 	i = 0;
 	if (!envp)
 		return (NULL);
@@ -27,16 +28,17 @@ char	**get_path(char **envp)
 	return (NULL);
 }
 
-char    *pipex_join(char *path, char *instructions)
+char	*pipex_join(char *path, char *instructions)
 {
-	int	i;
-	int j;
-	char *command_path;
+	int		i;
+	int		j;
+	int		size;
+	char	*command_path;
 
-	command_path = NULL;
 	i = 0;
 	j = 0;
-	command_path = (char *)malloc(sizeof(char) * (ft_strlen(path) + ft_strlen(instructions) + 2));
+	size = ft_strlen(path) + ft_strlen(instructions) + 2;
+	command_path = (char *)malloc(sizeof(char) * (size));
 	if (!command_path)
 		return (NULL);
 	while (path[i])
@@ -53,8 +55,8 @@ char    *pipex_join(char *path, char *instructions)
 
 char	*find_command_path(t_program_data *data)
 {
+	char	**bin;
 	char	*inst;
-    char    **bin;
 	int		i;
 
 	i = 0;
@@ -70,15 +72,12 @@ char	*find_command_path(t_program_data *data)
 	free(inst);
 	while (data->path[i])
 	{
-		inst = pipex_join(data->path[i], bin[0]);
+		inst = pipex_join(data->path[i++], bin[0]);
 		if (access(inst, F_OK) == 0)
 			return (_clean_char_tab(data->path), inst);
 		free(inst);
-		i++;
 	}
 	perror(bin[0]);
 	_clean_char_tab(data->path);
-	clean(data);
-	exit(0);
-	return (_clean_char_tab(data->path), NULL);
+	return (_clean_exit(data), NULL);
 }

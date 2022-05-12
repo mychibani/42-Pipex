@@ -12,13 +12,14 @@
 
 #include "pipex.h"
 
-void    _clean_char_tab(char **tab)
+void	_clean_char_tab(char **tab)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	if (!tab || !tab[i])
+	if (!tab)
 		return ;
+	fprintf(stderr, "%p\n", tab);
 	while (tab[i])
 	{
 		free(tab[i]);
@@ -27,9 +28,15 @@ void    _clean_char_tab(char **tab)
 	free(tab);
 }
 
+void	_clean_exit(t_program_data *data)
+{
+	clean(data);
+	exit(0);
+}
+
 void	free_content(t_list **lst)
 {
-	t_list *move;
+	t_list	*move;
 
 	move = *lst;
 	while (move)
@@ -40,19 +47,21 @@ void	free_content(t_list **lst)
 	}
 }
 
-void useless_fct(void *elem)
+void	useless_fct(void *elem)
 {
 	(void)elem;
 }
 
-void    clean(t_program_data *data)
+void	clean(t_program_data *data)
 {
-	t_list *temp;
-	
+	t_list	*temp;
+
 	temp = data->head;
 	if (data->limiter)
 		unlink("/tmp/heredoc.tmp");
-	_clean_char_tab(data->path);
+	if (data->path){
+		fprintf(stderr, "%p\n", data->path);
+		_clean_char_tab(data->path);}
 	free_content(&temp);
 	ft_lstclear(&temp, useless_fct);
 	free(data);

@@ -20,8 +20,9 @@ void	_error_prompt(char *str)
 
 void	_usage_error(t_program_data *data)
 {
-	ft_putstr_fd("Usage : ./pipex <infile> cmd1 cmd2 <outfile>\n", 2);
-	free(data);
+	ft_putstr_fd("Usage : ./pipex <infile> 'unlimited command' <outfile>\n", 2);
+	ft_putstr_fd("Or ./pipex here_doc LIMITER cmd1 cmd2 outfile\n", 2);
+	clean(data);
 }
 
 void	_wait(int *pid, t_program_data *data)
@@ -64,7 +65,7 @@ int	main(int ac, char **av, char **env)
 	data = (t_program_data *)malloc(sizeof(t_program_data));
 	if (!data)
 		return (perror("error "), STDERR_FILENO);
-	if (ac < 5 || ac > 5)
+	if (ac < 5)
 		return (_usage_error(data), STDERR_FILENO);
 	if (!init_data(ac, av, env, data))
 		return (STDERR_FILENO);

@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   init_pipex.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychibani <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ychibani <ychibani@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 14:30:12 by ychibani          #+#    #+#             */
 /*   Updated: 2022/05/10 14:30:18 by ychibani         ###   ########.fr       */

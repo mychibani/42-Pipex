@@ -6,7 +6,7 @@
 /*   By: ychibani <ychibani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 16:08:04 by ychibani          #+#    #+#             */
-/*   Updated: 2022/05/04 12:22:13 by ychibani         ###   ########.fr       */
+/*   Updated: 2022/05/13 20:51:32 by ychibani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	_clean_char_tab(char **tab)
 	i = 0;
 	if (!tab)
 		return ;
-	fprintf(stderr, "%p\n", tab);
 	while (tab[i])
 	{
 		free(tab[i]);
@@ -59,9 +58,8 @@ void	clean(t_program_data *data)
 	temp = data->head;
 	if (data->limiter)
 		unlink("/tmp/heredoc.tmp");
-	if (data->path){
-		fprintf(stderr, "%p\n", data->path);
-		_clean_char_tab(data->path);}
+	if (data->path)
+		_clean_char_tab(data->path);
 	free_content(&temp);
 	ft_lstclear(&temp, useless_fct);
 	free(data);

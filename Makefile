@@ -18,7 +18,7 @@ SRCS_INIT		=		srcs/init/init_pipex.c	\
 
 SRCS_CLEAN		=		srcs/clean/cleaner_prog.c \
 
-SRCS_BONUS		=		srcs/bonus/pipex_bonus.c	\
+SRCS_BONUS		=		bonus/pipex_bonus.c	\
 
 HEADER_FILES	=	libft.h					\
 					define.h				\
@@ -98,7 +98,7 @@ ${PIPEX_BONUS}:	${OBJS_BONUS} ${OBJS_PIPEX} ${OBJS_PARSING} ${OBJS_UTILS} ${OBJS
 				@echo "Compiling ${_GREEN}${_BOLD}libft${_END}..."
 				@${MAKE} -C libft >/dev/null
 				@echo "Compiling ${_CYAN}${_BOLD}pipex${_END}..."
-				@${CC} ${CFLAGS} ${INCS} ${OBJS_MAIN} ${OBJS_UTILS} ${OBJS_PARSING} ${OBJS_PIPEX} ${OBJS_INIT} ${OBJS_CLEAN} ${OBJS_HERE_DOC} -o ${NAME} ${LIBFT}
+				@${CC} ${CFLAGS} ${INCS} ${OBJS_BONUS} ${OBJS_UTILS} ${OBJS_PARSING} ${OBJS_PIPEX} ${OBJS_INIT} ${OBJS_CLEAN} ${OBJS_HERE_DOC} -o ${PIPEX_BONUS} ${LIBFT}
 
 bonus		:	${PIPEX_BONUS}
 
@@ -110,7 +110,7 @@ clean:
 
 fclean:			clean
 				@echo "Deleting ${_RED}${_BOLD}pipex and checker${_END}..."
-				@${RM} ${OBJS_MAIN} ${OBJS_PIPEX} ${OBJS_PARSING} ${OBJS_UTILS} ${OBJS_INIT} ${OBJS_CLEAN} ${OBJS_HERE_DOC} ${NAME} ${BONUS}
+				@${RM} ${OBJS_MAIN} ${OBJS_PIPEX} ${OBJS_PARSING} ${OBJS_UTILS} ${OBJS_INIT} ${OBJS_CLEAN} ${OBJS_HERE_DOC} ${NAME} ${PIPEX_BONUS}
 				@echo "Deleting ${_RED}${_BOLD}libft librairy${_END}..."
 				@${MAKE} -C libft fclean >/dev/null
 

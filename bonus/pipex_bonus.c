@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychibani <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ychibani <ychibani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 14:45:32 by ychibani          #+#    #+#             */
-/*   Updated: 2022/05/10 14:46:04 by ychibani         ###   ########.fr       */
+/*   Updated: 2022/05/13 22:28:02 by ychibani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,10 @@ int	pipex(t_program_data *data)
 			exec_children_work(data);
 		if (!__is_child(data->pid[data->index]))
 		{
-			_close_file_descriptors(data->prev_read, data->pipe[1]);
+			if (data->index)
+				_close_file_descriptors(data->prev_read, data->pipe[1]);
+			else
+				close(data->pipe[1]);
 			data->prev_read = data->pipe[0];
 		}
 		data->index++;

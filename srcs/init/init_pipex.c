@@ -6,7 +6,7 @@
 /*   By: ychibani <ychibani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 14:30:12 by ychibani          #+#    #+#             */
-/*   Updated: 2022/05/13 22:29:06 by ychibani         ###   ########.fr       */
+/*   Updated: 2022/05/13 22:31:45 by ychibani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ void	init_data_heredoc(t_program_data *data, int ac, char **av, char **env)
 
 void	init_usual_data(t_program_data *data, int ac, char **av, char **env)
 {
+	data->infile_name = av[1];
 	data->outfile = open_outfile(av[ac - 1], 1);
-	data->prev_read = open_infile(av[1], data);
 	data->elem = init_inst_list(ac, av, 2);
 	data->ninst = ft_lstsize(data->elem);
 	data->env = env;
@@ -59,6 +59,7 @@ void	init_usual_data(t_program_data *data, int ac, char **av, char **env)
 
 void	init(t_program_data *data)
 {
+	data->infile_name = NULL;
 	data->prev_read = 0;
 	data->outfile = 0;
 	data->elem = NULL;

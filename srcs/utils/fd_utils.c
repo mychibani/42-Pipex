@@ -3,26 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   fd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ychibani <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ychibani <ychibani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 14:53:24 by ychibani          #+#    #+#             */
-/*   Updated: 2022/05/10 14:53:26 by ychibani         ###   ########.fr       */
+/*   Updated: 2022/05/13 22:34:32 by ychibani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	open_infile(char *infile_name, t_program_data *data)
+int	open_infile(char *infile_name)
 {
+	int infile;
+
+	infile = open(infile_name, O_RDONLY);
 	if (access(infile_name, R_OK))
 	{
 		ft_putstr_fd("pipex: ", STDERR_FILENO);
 		ft_putstr_fd("no such file or directory: ", STDERR_FILENO);
 		ft_putstr_fd(infile_name, STDERR_FILENO);
 		ft_putstr_fd("\n", 2);
-		_clean_exit(data);
 	}
-	return (open(infile_name, O_RDONLY));
+	if (infile < 0)
+		return (0);
+	return (infile);
 }
 
 int	open_outfile(char *outfile_name, int mode)

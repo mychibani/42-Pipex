@@ -6,7 +6,7 @@
 /*   By: ychibani <ychibani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 14:18:40 by ychibani          #+#    #+#             */
-/*   Updated: 2022/05/03 21:39:52 by ychibani         ###   ########.fr       */
+/*   Updated: 2022/05/13 22:36:03 by ychibani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@ void	_execute_command(t_program_data *data)
 
 void	starter_child_worker(t_program_data *data)
 {
-	if (data->prev_read < 0)
-		_error_prompt("file");
+	data->prev_read = open_infile(data->infile_name);
 	_close_file_descriptors(data->pipe[0], data->outfile);
 	_file_descriptors_duplicators(data->prev_read, data->pipe[1]);
-	_close_file_descriptors(data->prev_read, data->pipe[1]);
+	if (data->prev_read)
+		_close_file_descriptors(data->prev_read, data->pipe[1]);
 	_execute_command(data);
 	_error_prompt(data->elem->content[0]);
 }

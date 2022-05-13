@@ -6,7 +6,7 @@
 /*   By: ychibani <ychibani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 08:28:22 by ychibani          #+#    #+#             */
-/*   Updated: 2022/05/04 13:52:25 by ychibani         ###   ########.fr       */
+/*   Updated: 2022/05/13 22:33:56 by ychibani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ struct	s_program_data
 	char	**path;
 	char	**env;
 	char	*limiter;
+	char	*infile_name;
 	t_list	*head;
 	t_list	*elem;
 	size_t	ninst;
@@ -48,7 +49,7 @@ void			print_data(t_program_data *data);
 void			print_tab(char **tab);
 int				__is_child(pid_t process);
 int				__is_same(char *str, char *is_same);
-int				open_infile(char *infile_name, t_program_data *data);
+int				open_infile(char *infile_name);
 int				open_outfile(char *outfile_name, int mode);
 void			starter_child_worker(t_program_data *data);
 void			child_worker(t_program_data *data);

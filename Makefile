@@ -110,7 +110,7 @@ clean:
 
 fclean:			clean
 				@echo "Deleting ${_RED}${_BOLD}pipex and checker${_END}..."
-				@${RM} ${OBJS_MAIN} ${OBJS_PIPEX} ${OBJS_PARSING} ${OBJS_UTILS} ${OBJS_INIT} ${OBJS_CLEAN} ${OBJS_HERE_DOC} ${NAME} ${BONUS}
+				@${RM} ${OBJS_MAIN} ${OBJS_PIPEX} ${OBJS_PARSING} ${OBJS_UTILS} ${OBJS_INIT} ${OBJS_CLEAN} ${OBJS_HERE_DOC} ${NAME} ${PIPEX_BONUS}
 				@echo "Deleting ${_RED}${_BOLD}libft librairy${_END}..."
 				@${MAKE} -C libft fclean >/dev/null
 

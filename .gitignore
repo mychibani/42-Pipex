@@ -1,2 +1,5 @@
 *.o
 *.d
+outfile
+infile
+.vscode

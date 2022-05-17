@@ -38,6 +38,8 @@ void	free_content(t_list **lst)
 	t_list	*move;
 
 	move = *lst;
+	if (!move)
+		return ;
 	while (move)
 	{
 		if (move->content)
@@ -58,9 +60,10 @@ void	clean(t_program_data *data)
 	temp = data->head;
 	if (data->limiter)
 		unlink("/tmp/heredoc.tmp");
-	if (data->path){
-		_clean_char_tab(data->path);}
+	if (data->path)
+		_clean_char_tab(data->path);
 	free_content(&temp);
 	ft_lstclear(&temp, useless_fct);
+	free(data->pid);
 	free(data);
 }

@@ -31,8 +31,9 @@ void	_wait(int *pid, t_program_data *data)
 	i = 0;
 	while (i < (int)data->ninst)
 		waitpid(pid[i++], 0, 0);
-	close(data->prev_read);
-	free(pid);
+	_close_file_descriptors(data->pipe[0], data->pipe[1]);
+	if (data->prev_read)
+		close(data->prev_read);
 }
 
 int	pipex(t_program_data *data)
@@ -40,15 +41,18 @@ int	pipex(t_program_data *data)
 	while (data->index < data->ninst)
 	{
 		if (pipe(data->pipe) < 0)
-			_error_prompt("pipe :");
+			return (perror("pipe"), _FAILURE_);
 		data->pid[data->index] = fork();
 		if (data->pid[data->index] < 0)
 			return (perror("fork "), _FAILURE_);
 		if (__is_child(data->pid[data->index]))
 			exec_children_work(data);
 		if (!__is_child(data->pid[data->index]))
-		{
-			_close_file_descriptors(data->prev_read, data->pipe[1]);
+		{	
+			if (data->index)
+				_close_file_descriptors(data->prev_read, data->pipe[1]);
+			else
+				close(data->pipe[1]);
 			data->prev_read = data->pipe[0];
 		}
 		data->index++;
@@ -64,14 +68,15 @@ int	main(int ac, char **av, char **env)
 	data = (t_program_data *)malloc(sizeof(t_program_data));
 	if (!data)
 		return (perror("error "), STDERR_FILENO);
-	if (ac < 5 || ac > 5)
+	if (!(ac == 5))
 		return (_usage_error(data), STDERR_FILENO);
 	if (!init_data(ac, av, env, data))
 		return (STDERR_FILENO);
 	if (!pipex(data))
-		return (STDERR_FILENO);
+		return (clean(data), STDERR_FILENO);
 	if (_close_file_descriptors(data->prev_read, data->outfile) == _ERROR_)
-		return (_error_prompt("close "), STDERR_FILENO);
+		return (clean(data), STDERR_FILENO);
 	_wait(data->pid, data);
+	_clean_exit(data);
 	return (_clean_exit(data), _SUCCESS_);
 }

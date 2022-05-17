@@ -19,6 +19,7 @@ SRCS_INIT		=		srcs/init/init_pipex.c	\
 SRCS_CLEAN		=		srcs/clean/cleaner_prog.c \
 
 SRCS_BONUS		=		bonus/pipex_bonus.c	\
+						bonus/init_pipex_bonus.c
 
 HEADER_FILES	=	libft.h					\
 					define.h				\
@@ -56,7 +57,8 @@ LIBFT			=	libft/libft.a
 
 CC				=	gcc 
 
-CFLAGS			=  -Wall -Werror -Wextra -g3 #-fsanitize=address 
+CFLAGS			=  -Wall -Werror -Wextra -g3 
+#-fsanitize=address
 
 RM				=	rm -rf
 
@@ -91,14 +93,14 @@ all:		${NAME}
 ${NAME}:		${OBJS_MAIN} ${OBJS_PIPEX} ${OBJS_PARSING} ${OBJS_UTILS} ${OBJS_INIT} ${OBJS_CLEAN} ${OBJS_HERE_DOC}
 				@echo "Compiling ${_GREEN}${_BOLD}libft${_END}..."
 				@${MAKE} -C libft >/dev/null
-				@echo "Compiling ${_CYAN}${_BOLD}pipex${_END}..."
+				@echo "Compiling ${_CYAN}${_BOLD}Pipex${_END}..."
 				@${CC} ${CFLAGS} ${INCS} ${OBJS_MAIN} ${OBJS_UTILS} ${OBJS_PARSING} ${OBJS_PIPEX} ${OBJS_INIT} ${OBJS_CLEAN} ${OBJS_HERE_DOC} -o ${NAME} ${LIBFT}
 
-${PIPEX_BONUS}:	${OBJS_BONUS} ${OBJS_PIPEX} ${OBJS_PARSING} ${OBJS_UTILS} ${OBJS_INIT} ${OBJS_CLEAN} ${OBJS_HERE_DOC}
+${PIPEX_BONUS}:	${OBJS_BONUS} ${OBJS_PIPEX} ${OBJS_PARSING} ${OBJS_UTILS} ${OBJS_CLEAN} ${OBJS_HERE_DOC}
 				@echo "Compiling ${_GREEN}${_BOLD}libft${_END}..."
 				@${MAKE} -C libft >/dev/null
-				@echo "Compiling ${_CYAN}${_BOLD}pipex${_END}..."
-				@${CC} ${CFLAGS} ${INCS} ${OBJS_BONUS} ${OBJS_UTILS} ${OBJS_PARSING} ${OBJS_PIPEX} ${OBJS_INIT} ${OBJS_CLEAN} ${OBJS_HERE_DOC} -o ${PIPEX_BONUS} ${LIBFT}
+				@echo "Compiling ${_CYAN}${_BOLD}Bonus${_END}..."
+				@${CC} ${CFLAGS} ${INCS} ${OBJS_BONUS} ${OBJS_UTILS} ${OBJS_PARSING} ${OBJS_PIPEX} ${OBJS_CLEAN} ${OBJS_HERE_DOC} -o ${PIPEX_BONUS} ${LIBFT}
 
 bonus		:	${PIPEX_BONUS}
 
@@ -116,6 +118,11 @@ fclean:			clean
 
 re:				fclean all
 
+git :
+		git add .
+		git commit -m "$m"
+		git push -u origin master 
+
 -include ${DEPS_FILES}
 
-.PHONY:			all clean fclean re bonus 
+.PHONY:			all clean fclean re bonus git

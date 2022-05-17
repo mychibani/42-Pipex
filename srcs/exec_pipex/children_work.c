@@ -23,18 +23,17 @@ void	_execute_command(t_program_data *data)
 
 void	starter_child_worker(t_program_data *data)
 {
-	data->prev_read = open_infile(data->infile_name);
-	_close_file_descriptors(data->pipe[0], data->outfile);
+	if (data->mode == USUAL)
+		data->prev_read = open_infile(data->infile_name, data);
+	close(data->pipe[0]);
 	_file_descriptors_duplicators(data->prev_read, data->pipe[1]);
-	if (data->prev_read)
-		_close_file_descriptors(data->prev_read, data->pipe[1]);
+	_close_file_descriptors(data->prev_read, data->pipe[1]);
 	_execute_command(data);
 	_error_prompt(data->elem->content[0]);
 }
 
 void	child_worker(t_program_data *data)
 {
-	close(data->outfile);
 	close(data->pipe[0]);
 	_file_descriptors_duplicators(data->prev_read, data->pipe[1]);
 	_close_file_descriptors(data->pipe[1], data->prev_read);
@@ -43,6 +42,7 @@ void	child_worker(t_program_data *data)
 
 void	finisher_child_worker(t_program_data *data)
 {
+	data->outfile = open_outfile(data->outfile_name, data->mode, data);
 	close(data->pipe[1]);
 	_file_descriptors_duplicators(data->prev_read, data->outfile);
 	_close_file_descriptors(data->prev_read, data->outfile);

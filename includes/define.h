@@ -33,4 +33,12 @@
 #  define _FAILURE_ 0
 # endif
 
+# ifndef HERE_DOC
+#  define HERE_DOC 1
+# endif
+
+# ifndef USUAL
+#  define USUAL 0
+# endif
+
 #endif

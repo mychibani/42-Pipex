@@ -29,8 +29,10 @@ int	__is_same(char *str, char *is_same)
 
 int	_close_file_descriptors(int _first, int _second)
 {
-	if (close(_first) < 0 || close(_second) < 0)
-		return (_ERROR_);
+	if (_first > 0)
+		close(_first);
+	if (_second > 0)
+		close(_second);
 	return (_SUCCESS_);
 }
 

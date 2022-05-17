@@ -22,7 +22,7 @@ void	_usage_error(t_program_data *data)
 {
 	ft_putstr_fd("Usage : ./pipex <infile> 'unlimited command' <outfile>\n", 2);
 	ft_putstr_fd("Or ./pipex here_doc LIMITER cmd1 cmd2 outfile\n", 2);
-	clean(data);
+	free(data);
 }
 
 void	_wait(int *pid, t_program_data *data)
@@ -32,8 +32,9 @@ void	_wait(int *pid, t_program_data *data)
 	i = 0;
 	while (i < (int)data->ninst)
 		waitpid(pid[i++], 0, 0);
-	close(data->prev_read);
-	free(pid);
+	_close_file_descriptors(data->pipe[0], data->pipe[1]);
+	if (data->prev_read)
+		close(data->prev_read);
 }
 
 int	pipex(t_program_data *data)

@@ -15,9 +15,11 @@
 
 typedef struct s_program_data	t_program_data;
 typedef struct s_list			t_list;
+typedef	int t_bool;
 
 struct	s_program_data
 {
+	t_bool	mode;
 	int		*pid;
 	int		pipe[2];
 	int		prev_read;
@@ -26,6 +28,7 @@ struct	s_program_data
 	char	**env;
 	char	*limiter;
 	char	*infile_name;
+	char	*outfile_name;
 	t_list	*head;
 	t_list	*elem;
 	size_t	ninst;
@@ -49,8 +52,8 @@ void			print_data(t_program_data *data);
 void			print_tab(char **tab);
 int				__is_child(pid_t process);
 int				__is_same(char *str, char *is_same);
-int				open_infile(char *infile_name);
-int				open_outfile(char *outfile_name, int mode);
+int				open_infile(char *infile_name, t_program_data *data);
+int				open_outfile(char *outfile_name, int mode, t_program_data *data);
 void			starter_child_worker(t_program_data *data);
 void			child_worker(t_program_data *data);
 void			finisher_child_worker(t_program_data *data);

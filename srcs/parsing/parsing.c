@@ -68,16 +68,15 @@ char	*find_command_path(t_program_data *data)
 	}
 	inst = pipex_join(".", bin[0]);
 	if (access(inst, F_OK) == 0)
-		return (_clean_char_tab(data->path), inst);
+		return (inst);
 	free(inst);
 	while (data->path[i])
 	{
 		inst = pipex_join(data->path[i++], bin[0]);
 		if (access(inst, F_OK) == 0)
-			return (_clean_char_tab(data->path), inst);
+			return (inst);
 		free(inst);
 	}
 	perror(bin[0]);
-	_clean_char_tab(data->path);
 	return (_clean_exit(data), NULL);
 }

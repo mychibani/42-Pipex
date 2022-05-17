@@ -32,8 +32,7 @@ void	_wait(int *pid, t_program_data *data)
 	while (i < (int)data->ninst)
 		waitpid(pid[i++], 0, 0);
 	_close_file_descriptors(data->pipe[0], data->pipe[1]);
-	if (data->prev_read)
-		close(data->prev_read);
+	close(data->prev_read);
 }
 
 int	pipex(t_program_data *data)
@@ -77,6 +76,5 @@ int	main(int ac, char **av, char **env)
 	if (_close_file_descriptors(data->prev_read, data->outfile) == _ERROR_)
 		return (clean(data), STDERR_FILENO);
 	_wait(data->pid, data);
-	_clean_exit(data);
 	return (_clean_exit(data), _SUCCESS_);
 }

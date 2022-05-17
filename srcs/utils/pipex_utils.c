@@ -38,7 +38,9 @@ int	_close_file_descriptors(int _first, int _second)
 
 int	_file_descriptors_duplicators(int _first, int _second)
 {
-	if ((dup2(_first, STDIN_FILENO < 0)) || (dup2(_second, STDOUT_FILENO) < 0))
-		return (1);
-	return (0);
+	if (_first > 0)
+		dup2(_first, STDIN_FILENO);
+	if (_second > 0)
+		dup2(_second, STDOUT_FILENO);
+	return (1);
 }

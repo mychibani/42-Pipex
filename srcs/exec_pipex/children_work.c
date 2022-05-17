@@ -18,14 +18,15 @@ void	_execute_command(t_program_data *data)
 	ft_putstr_fd("pipex :", STDERR_FILENO);
 	ft_putstr_fd(data->elem->content[0], STDERR_FILENO);
 	ft_putstr_fd(": command not found\n", STDERR_FILENO);
+	clean(data);
 	exit(EXIT_FAILURE);
 }
 
 void	starter_child_worker(t_program_data *data)
 {
+	close(data->pipe[0]);
 	if (data->mode == USUAL)
 		data->prev_read = open_infile(data->infile_name, data);
-	close(data->pipe[0]);
 	_file_descriptors_duplicators(data->prev_read, data->pipe[1]);
 	_close_file_descriptors(data->prev_read, data->pipe[1]);
 	_execute_command(data);
@@ -42,8 +43,8 @@ void	child_worker(t_program_data *data)
 
 void	finisher_child_worker(t_program_data *data)
 {
-	data->outfile = open_outfile(data->outfile_name, data->mode, data);
 	close(data->pipe[1]);
+	data->outfile = open_outfile(data->outfile_name, data->mode, data);
 	_file_descriptors_duplicators(data->prev_read, data->outfile);
 	_close_file_descriptors(data->prev_read, data->outfile);
 	_execute_command(data);

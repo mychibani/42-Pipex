@@ -24,13 +24,14 @@ int	open_infile(char *infile_name, t_program_data *data)
 		ft_putstr_fd(infile_name, STDERR_FILENO);
 		ft_putstr_fd("\n", 2);
 		_close_file_descriptors(data->pipe[0], data->pipe[1]);
-		//exit
+		clean(data);
+		exit(EXIT_FAILURE);
 	}
 	else if (infile < 0)
 	{
 		_close_file_descriptors(data->pipe[0], data->pipe[1]);
+		clean(data);
 		_error_prompt(infile_name);
-		//exit
 	}
 	else
 		return (infile);
@@ -48,8 +49,7 @@ int	open_outfile(char *outfile_name, int mode, t_program_data *data)
 	if (outfile < 0)
 	{
 		_close_file_descriptors(data->pipe[0], data->pipe[1]);
-		if (data->prev_read)
-			close(data->prev_read);
+		clean(data);
 		_error_prompt(outfile_name);
 	}
 	return (outfile);

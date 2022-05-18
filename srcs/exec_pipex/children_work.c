@@ -43,7 +43,7 @@ void	child_worker(t_program_data *data)
 
 void	finisher_child_worker(t_program_data *data)
 {
-	close(data->pipe[1]);
+	_close_file_descriptors(data->pipe[1], data->pipe[0]);
 	data->outfile = open_outfile(data->outfile_name, data->mode, data);
 	_file_descriptors_duplicators(data->prev_read, data->outfile);
 	_close_file_descriptors(data->prev_read, data->outfile);

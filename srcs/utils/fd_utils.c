@@ -48,6 +48,7 @@ int	open_outfile(char *outfile_name, int mode, t_program_data *data)
 		outfile = open(outfile_name, O_RDWR | O_CREAT | O_APPEND, 0644);
 	if (outfile < 0)
 	{
+		close(data->prev_read);
 		_close_file_descriptors(data->pipe[0], data->pipe[1]);
 		clean(data);
 		_error_prompt(outfile_name);

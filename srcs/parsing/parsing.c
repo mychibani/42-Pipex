@@ -62,10 +62,9 @@ char	*find_command_path(t_program_data *data)
 	i = 0;
 	bin = data->elem->content;
 	if (!data->path)
-	{
-		clean(data);
-		_error_prompt("command not found");
-	}
+		return (NULL);
+	if (access(bin[0], F_OK) == 0)
+		return (bin[0]);
 	inst = pipex_join(".", bin[0]);
 	if (access(inst, F_OK) == 0)
 		return (inst);
@@ -77,6 +76,5 @@ char	*find_command_path(t_program_data *data)
 			return (inst);
 		free(inst);
 	}
-	perror(bin[0]);
-	return (_clean_exit(data), NULL);
+	return (NULL);
 }

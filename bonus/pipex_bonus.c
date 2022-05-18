@@ -77,6 +77,5 @@ int	main(int ac, char **av, char **env)
 	if (_close_file_descriptors(data->prev_read, data->outfile) == _ERROR_)
 		return (_error_prompt("close "), STDERR_FILENO);
 	_wait(data->pid, data);
-	while(1);
 	return (_clean_exit(data), _SUCCESS_);
 }

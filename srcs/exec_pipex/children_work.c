@@ -14,10 +14,21 @@
 
 void	_execute_command(t_program_data *data)
 {
+	if (!find_command_path(data))
+	{
+		ft_putstr_fd("command not found: ", STDERR_FILENO);
+		ft_putstr_fd(data->elem->content[0], STDERR_FILENO);
+		ft_putstr_fd("\n", 2);
+		if (data->index == data->ninst - 1)
+		{
+			clean(data);
+			exit(127);
+		}
+		clean(data);
+		exit(EXIT_FAILURE);
+	}
 	execve(find_command_path(data), data->elem->content, data->env);
-	ft_putstr_fd("pipex :", STDERR_FILENO);
-	ft_putstr_fd(data->elem->content[0], STDERR_FILENO);
-	ft_putstr_fd(": command not found\n", STDERR_FILENO);
+	perror(data->elem->content[0]);
 	clean(data);
 	exit(EXIT_FAILURE);
 }
@@ -30,7 +41,6 @@ void	starter_child_worker(t_program_data *data)
 	_file_descriptors_duplicators(data->prev_read, data->pipe[1]);
 	_close_file_descriptors(data->prev_read, data->pipe[1]);
 	_execute_command(data);
-	_error_prompt(data->elem->content[0]);
 }
 
 void	child_worker(t_program_data *data)

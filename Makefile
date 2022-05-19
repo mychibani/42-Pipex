@@ -118,11 +118,6 @@ fclean:			clean
 
 re:				fclean all
 
-git :
-		git add .
-		git commit -m "$m"
-		git push -u origin master 
-
 -include ${DEPS_FILES}
 
 .PHONY:			all clean fclean re bonus git

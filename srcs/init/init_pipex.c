@@ -6,7 +6,7 @@
 /*   By: ychibani <ychibani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 14:30:12 by ychibani          #+#    #+#             */
-/*   Updated: 2022/05/14 19:00:41 by ychibani         ###   ########.fr       */
+/*   Updated: 2022/05/19 23:50:00 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_list	*init_inst_list(int ac, char **av, int i)
 void	init_usual_data(t_program_data *data, int ac, char **av, char **env)
 {
 	data->infile_name = av[1];
-	data->outfile_name = av[ac - 1]; 
+	data->outfile_name = av[ac - 1];
 	data->elem = init_inst_list(ac, av, 2);
 	data->ninst = ft_lstsize(data->elem);
 	data->env = env;

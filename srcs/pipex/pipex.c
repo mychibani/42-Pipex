@@ -6,7 +6,7 @@
 /*   By: ychibani <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 14:45:32 by ychibani          #+#    #+#             */
-/*   Updated: 2022/05/10 14:46:04 by ychibani         ###   ########.fr       */
+/*   Updated: 2022/05/19 23:50:46 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	_usage_error(t_program_data *data)
 void	_wait(int *pid, t_program_data *data)
 {
 	int	i;
-	int wstatus;
+	int	wstatus;
 	int	ret;
 
 	ret = 1;
@@ -68,7 +68,7 @@ int	pipex(t_program_data *data)
 
 int	main(int ac, char **av, char **env)
 {
-	t_program_data *data;
+	t_program_data	*data;
 
 	data = (t_program_data *)malloc(sizeof(t_program_data));
 	if (!data)

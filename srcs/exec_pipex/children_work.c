@@ -6,7 +6,7 @@
 /*   By: ychibani <ychibani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 14:18:40 by ychibani          #+#    #+#             */
-/*   Updated: 2022/05/13 22:36:03 by ychibani         ###   ########.fr       */
+/*   Updated: 2022/05/19 23:49:38 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,26 @@
 
 void	_execute_command(t_program_data *data)
 {
-	if (!find_command_path(data))
+	char	*new_command;
+
+	new_command = find_command_path(data);
+	if (!new_command)
 	{
 		ft_putstr_fd("command not found: ", STDERR_FILENO);
 		ft_putstr_fd(data->elem->content[0], STDERR_FILENO);
 		ft_putstr_fd("\n", 2);
 		if (data->index == data->ninst - 1)
 		{
+			free(new_command);
 			clean(data);
 			exit(127);
 		}
+		free(new_command);
 		clean(data);
 		exit(EXIT_FAILURE);
 	}
-	execve(find_command_path(data), data->elem->content, data->env);
+	execve(new_command, data->elem->content, data->env);
+	free(new_command);
 	perror(data->elem->content[0]);
 	clean(data);
 	exit(EXIT_FAILURE);

@@ -47,6 +47,8 @@ char	*pipex_join(char *path, char *instructions)
 		i++;
 	}
 	command_path[i++] = '/';
+	if (!instructions)
+		return (free(command_path), NULL);
 	while (instructions[j])
 		command_path[i++] = instructions[j++];
 	command_path[i] = '\0';
@@ -62,6 +64,8 @@ char	*find_command_path(t_program_data *data)
 	i = 0;
 	bin = data->elem->content;
 	if (!data->path)
+		return (NULL);
+	if (!bin[0])
 		return (NULL);
 	if (access(bin[0], F_OK) == 0)
 		return (bin[0]);

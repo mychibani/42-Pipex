@@ -17,7 +17,9 @@ int	check_until_open(void)
 	int	i;
 	int	temp;
 
-	i = 500;
+	i = 5000;
+	if (access("/tmp/heredoc.tmp", F_OK) == 0)
+		unlink("/tmp/heredoc.tmp");
 	while (i >= 0)
 	{
 		temp = open("/tmp/heredoc.tmp", O_CREAT | O_APPEND | O_RDWR, 0644);

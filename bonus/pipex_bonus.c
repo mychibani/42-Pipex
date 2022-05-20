@@ -28,12 +28,18 @@ void	_usage_error(t_program_data *data)
 void	_wait(int *pid, t_program_data *data)
 {
 	int	i;
+	int	wstatus;
+	int	ret;
 
+	ret = 1;
 	i = 0;
 	while (i < (int)data->ninst)
-		waitpid(pid[i++], 0, 0);
-	_close_file_descriptors(data->pipe[0], data->pipe[1]);
+		waitpid(pid[i++], &wstatus, 0);
 	close(data->prev_read);
+	if (WIFEXITED(wstatus))
+		ret = WEXITSTATUS(wstatus);
+	clean(data);
+	exit(ret);
 }
 
 int	pipex(t_program_data *data)
@@ -74,8 +80,6 @@ int	main(int ac, char **av, char **env)
 		return (STDERR_FILENO);
 	if (!pipex(data))
 		return (STDERR_FILENO);
-	if (_close_file_descriptors(data->prev_read, data->outfile) == _ERROR_)
-		return (_error_prompt("close "), STDERR_FILENO);
 	_wait(data->pid, data);
 	return (_clean_exit(data), _SUCCESS_);
 }
